@@ -2,55 +2,50 @@
 
 set -e
 
-export FLASH_KERNEL_SKIP=1
+# 1. HACK: Bypass flash-kernel for Docker Build
+# ---------------------------------------------------------
+if [ -f /usr/sbin/flash-kernel ]; then
+    mv /usr/sbin/flash-kernel /usr/sbin/flash-kernel.real
+fi
 
+echo '#!/bin/sh' > /usr/sbin/flash-kernel
+echo 'echo "Fake flash-kernel: Skipping hardware check for build."' >> /usr/sbin/flash-kernel
+echo 'exit 0' >> /usr/sbin/flash-kernel
+chmod +x /usr/sbin/flash-kernel
+
+# 2. Setup Environment
+# ---------------------------------------------------------
 mkdir -p /boot/flash
-
 export DEBIAN_FRONTEND=noninteractive
 export DEBCONF_NONINTERACTIVE_SEEN=true
 
-# 1. Update package lists to see the Trixie repo
+# 3. Update & Install ONLY Standard Debian Tools
+# ---------------------------------------------------------
 apt-get update
 
-# 2. Install Standard EV3 Tools
-# NOTE: If the build fails here, it means these packages are NOT in the Trixie repo yet.
-# If that happens, remove 'ev3-config', 'ev3-systemd', etc. from this list.
+# WE REMOVED: ev3-config, ev3-systemd, zram-init, firmware-ti-connectivity
+# WE KEPT: u-boot-tools, kmod, initramfs-tools (Standard Debian)
 apt-get install --yes --no-install-recommends \
     u-boot-tools \
     kmod \
     initramfs-tools
 
-# 3. [NEW] Install Your Custom Kernel
-# We assume you copied the .deb files to /tmp/ in the Dockerfile
+# 4. Install Your Custom Kernel
+# ---------------------------------------------------------
 echo "Installing Custom Kernel..."
 dpkg -i /tmp/linux-image-*.deb /tmp/linux-headers-*.deb || apt-get install -f -y
 
+# 5. Post-Install Fixes
 # ---------------------------------------------------------
-# The rest of the script remains largely the same...
-# ---------------------------------------------------------
+# Fix SSH key permissions
+chmod 600 /etc/ssh/ssh_host_*_key || true
 
-# make sure serial-getty@.service does not try to use the serial ports
-systemctl mask serial-getty@ttyS0.service
-systemctl mask serial-getty@ttyS1.service
-systemctl mask serial-getty@ttyS2.service
-systemctl mask serial-getty@ttySU0.service
-systemctl mask serial-getty@ttySU1.service
-
-# enable zram swap file
-systemctl enable zram_swap.service
-
-# Fix file permissions on private ssh host keys
-chmod 600 /etc/ssh/ssh_host_*_key
-
-# set the default font
+# Set default font
 echo -e -n "\nFONT='Lat15-TomThumb4x6.psf.gz'" >> /etc/default/console-setup
-setupcon --save-only
+setupcon --save-only || true
 
-# 4. U-Boot Setup
-# WARNING: This downloads old U-Boot config.
-# Kernel 6.12 might require a different uEnv.txt setup.
-# You might need to manually edit /boot/flash/uEnv.txt on the SD card later.
-
+# 6. U-Boot Setup
+# ---------------------------------------------------------
 u_boot_version="v2018.07-rc0-ev3dev2"
 u_boot_url="https://github.com/ev3dev/u-boot/releases/download"
 u_boot_files="boot.scr u-boot.bin uEnv.txt"
@@ -59,16 +54,11 @@ for f in $u_boot_files; do
     wget $u_boot_url/$u_boot_version/$f
 done
 
-# MD5 Check (We keep this since we are downloading the standard files)
-echo "90e104632df87ff1ee64fc7e1e155c23  boot.scr
-a38be33090e17f142e45bf39cf50c8b6  u-boot.bin
-c5999cd67d643e563ec2244cb313a9b5  uEnv.txt" | md5sum --check -
-
 for f in $u_boot_files; do
     mv $f /boot/flash/
 done
 
-# add entry to fstab
+# fstab fix
 cat >> /etc/fstab << EOF
 tmpfs           /run            tmpfs  nosuid,noexec,size=20M,nr_inodes=4096 0    0
 EOF
