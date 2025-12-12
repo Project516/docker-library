@@ -2,11 +2,11 @@
 # a fixed mirror here. This file is replaced when images are created with
 # brickstrap.
 
-deb http://ftp.debian.org/debian bullseye main contrib non-free
-#deb-src http://ftp.debian.org/debian bullseye main contrib non-free
+deb http://ftp.debian.org/debian trixie main contrib non-free
+#deb-src http://ftp.debian.org/debian trixie main contrib non-free
 
-#deb http://security.debian.org/ bullseye/updates main contrib non-free
-#deb-src http://security.debian.org/ bullseye/updates main contrib non-free
+#deb http://security.debian.org/ trixie/updates main contrib non-free
+#deb-src http://security.debian.org/ trixie/updates main contrib non-free
 
-deb http://archive.ev3dev.org/debian bullseye main
-#deb-src http://archive.ev3dev.org/debian bullseye main
+deb http://archive.ev3dev.org/debian trixie main
+#deb-src http://archive.ev3dev.org/debian trixie main

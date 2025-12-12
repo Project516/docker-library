@@ -17,9 +17,6 @@ apt-get install --yes --no-install-recommends \
     avahi-daemon \
     beep \
     bluez \
-    brickd \
-    brickman \
-    brickrun \
     bsdmainutils \
     ca-certificates \
     connman \
@@ -29,22 +26,12 @@ apt-get install --yes --no-install-recommends \
     dosfstools \
     espeak \
     ethtool \
-    ev3dev-adduser-config \
-    ev3dev-base-files \
-    ev3dev-bluez-config \
-    ev3dev-connman-config \
-    ev3dev-rules \
-    ev3dev-tools \
     evtest \
     fake-hwclock \
     fbcat \
     fbset \
     file \
-    firmware-atheros \
     firmware-linux-free \
-    firmware-ralink \
-    firmware-realtek \
-    firmware-zd1211 \
     flash-kernel \
     fontconfig \
     i2c-tools \
@@ -55,7 +42,6 @@ apt-get install --yes --no-install-recommends \
     isc-dhcp-client \
     kmod \
     less \
-    libgrx-3.0-2-plugin-linuxfb \
     libnss-mdns \
     libnss-myhostname \
     libnss-resolve \
@@ -66,7 +52,7 @@ apt-get install --yes --no-install-recommends \
     netbase \
     netcat-openbsd \
     netpbm \
-    ntp \
+    ntpsec \
     parted \
     procps \
     psmisc \
