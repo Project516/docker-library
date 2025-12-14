@@ -1,8 +1,8 @@
-deb http://httpredir.debian.org/debian trixie main contrib non-free
-#deb-src http://httpredir.debian.org/debian trixie main contrib non-free
+deb http://httpredir.debian.org/debian trixie main contrib non-free non-free-firmware
+#deb-src http://httpredir.debian.org/debian trixie main contrib non-free non-free-firmware
 
-#deb http://security.debian.org/ trixie/updates main contrib non-free
-#deb-src http://security.debian.org/ trixie/updates main contrib non-free
+#deb http://security.debian.org/ trixie/updates main contrib non-free non-free-firmware
+#deb-src http://security.debian.org/ trixie/updates main contrib non-free non-free-firmware
 
-deb http://archive.ev3dev.org/debian trixie main
-#deb-src http://archive.ev3dev.org/debian trixie main
+deb http://archive.ev3dev.org/debian trixie main contrib non-free non-free-firmware
+#deb-src http://archive.ev3dev.org/debian trixie main contrib non-free non-free-firmware

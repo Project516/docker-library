@@ -7,9 +7,9 @@ trixie.
 There is 1 hardware platform:
 * `ev3`: LEGO MINDSTORMS EV3
 
-There are 2 package variants:
+There is 1 package variant:
 * `base`: minimal install
-* `generic`: contains many scripting languages (used for official image release)
+<!--* `generic`: contains many scripting languages (used for official image release) -->
 
 Each variant is composes of "layers" defined in the `layers` directory. Each
 "layer" there generally produces two docker "layers".
@@ -40,7 +40,7 @@ Each layer conforms to the following rules:
 The dockerfile that will be used to actually create an image that will be released
 should contain the following:
 
-    ARG BRICKSTRAP_IMAGE_NAME=unknown-ev3dev-bullseye-image
+    ARG BRICKSTRAP_IMAGE_NAME=unknown-ev3dev-trixie-image
     ENV BRICKSTRAP_IMAGE_NAME ${BRICKSTRAP_IMAGE_NAME}
     RUN echo "$BRICKSTRAP_IMAGE_NAME" > /etc/ev3dev-release
 

@@ -24,14 +24,19 @@ apt-get install --yes --no-install-recommends \
     conspy \
     curl \
     dosfstools \
-    espeak \
+    espeak-ng \
     ethtool \
     evtest \
     fake-hwclock \
     fbcat \
     fbset \
     file \
+    firmware-ath9k-htc \
+    firmware-libertas \
     firmware-linux-free \
+    firmware-misc-nonfree \
+    firmware-realtek \
+    wireless-regdb \
     flash-kernel \
     fontconfig \
     i2c-tools \
@@ -56,6 +61,10 @@ apt-get install --yes --no-install-recommends \
     parted \
     procps \
     psmisc \
+    python3 \
+    python3-evdev \
+    python3-pil \
+    python3-serial \
     screen \
     ssh \
     sudo \
@@ -64,6 +73,7 @@ apt-get install --yes --no-install-recommends \
     usb-modeswitch \
     usbutils \
     vim \
+    vorbis-tools \
     wget \
     wpasupplicant \
     xfonts-100dpi \

@@ -30,10 +30,38 @@ apt-get install --yes --no-install-recommends \
     kmod \
     initramfs-tools
 
-# 4. Install Your Custom Kernel
+# 4. Install Custom Kernel & Fix Bootloader (GLUE FIX)
 # ---------------------------------------------------------
 echo "Installing Custom Kernel..."
 dpkg -i /tmp/*.deb || apt-get install -f -y
+
+echo "Gluing Kernel and DTB for legacy EV3 bootloader..."
+# 1. Find the kernel we just installed (sort by version to get the latest)
+KERNEL_FILE=$(ls -v /boot/vmlinuz* | tail -n 1)
+# 2. Find the DTB file (It hides in /usr/lib/...)
+DTB_FILE=$(find /usr -name "da850-lego-ev3.dtb" | head -n 1)
+
+if [ -f "$KERNEL_FILE" ] && [ -f "$DTB_FILE" ]; then
+    echo "Found Kernel: $KERNEL_FILE"
+    echo "Found DTB: $DTB_FILE"
+
+    # 3. Concatenate (Kernel + DTB) -> zImage
+    cat "$KERNEL_FILE" "$DTB_FILE" > /boot/zImage-dtb
+
+    # 4. Generate uImage (The one that actually boots)
+    mkimage -A arm -O linux -T kernel -C none -a 0xc0008000 -e 0xc0008000 \
+      -n "Linux 6.12 w/DTB" -d /boot/zImage-dtb /boot/uImage
+
+    # 5. Copy DTB to /boot (Just in case we need it separately later)
+    cp "$DTB_FILE" /boot/da850-lego-ev3.dtb
+
+    # 6. Cleanup
+    rm /boot/zImage-dtb
+    echo "SUCCESS: uImage created with appended DTB."
+else
+    echo "ERROR: Could not find kernel or DTB. Boot image will be broken."
+    exit 1
+fi
 
 # 5. Post-Install Fixes
 # ---------------------------------------------------------
