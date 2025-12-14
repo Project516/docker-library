@@ -33,7 +33,7 @@ apt-get install --yes --no-install-recommends \
 # 4. Install Your Custom Kernel
 # ---------------------------------------------------------
 echo "Installing Custom Kernel..."
-dpkg -i /tmp/linux-image-*.deb /tmp/linux-headers-*.deb || apt-get install -f -y
+dpkg -i /tmp/*.deb || apt-get install -f -y
 
 # 5. Post-Install Fixes
 # ---------------------------------------------------------
